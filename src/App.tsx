@@ -369,6 +369,9 @@ function App() {
             GPA Calculator - Tính điểm đại học theo thang 4.0 | Dữ liệu được lưu tự động trong
             trình duyệt
           </p>
+          <p className="mt-2">
+            Made by Hong Minh Nguyen - Xoaicaldez
+          </p>
         </div>
       </footer>
     </div>
