@@ -66,7 +66,7 @@ export default function PlanningTool({
 
       <CourseForm
         onAdd={(course) => onAddPlanned({ ...course, isPlanned: true })}
-        semesters={Array.from(new Set(courses.map(c => c.semester).filter(Boolean)))}
+        semesters={Array.from(new Set(courses.map(c => c.semester).filter((s): s is string => s !== undefined && s !== null && s !== '')))}
       />
 
       {plannedCourses.length > 0 && (

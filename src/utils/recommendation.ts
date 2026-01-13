@@ -164,8 +164,7 @@ function selectCoursesForPlan(
  */
 function calculateSimpleModeGPA(
   selectedCourses: CurriculumCourse[],
-  requiredAvgGPA: number,
-  config: RecommendationConfig
+  requiredAvgGPA: number
 ): RecommendedCourse[] {
   const recommended: RecommendedCourse[] = [];
 
@@ -343,7 +342,7 @@ export function generateRecommendation(
   if (config.mode === 'optimized') {
     recommendedCourses = calculateOptimizedModeGPA(selectedCourses, requiredPlanQualityPoints, config);
   } else {
-    recommendedCourses = calculateSimpleModeGPA(selectedCourses, requiredAvgGPAOnPlan, config);
+    recommendedCourses = calculateSimpleModeGPA(selectedCourses, requiredAvgGPAOnPlan);
   }
 
   const planTotalQualityPoints = recommendedCourses.reduce((sum, c) => 

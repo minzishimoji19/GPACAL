@@ -1,5 +1,4 @@
 import { CurriculumCourse, Course } from '../types';
-import { score10ToGPA4 } from './gpa';
 
 const STORAGE_KEY = 'gpa-calculator-curriculum';
 

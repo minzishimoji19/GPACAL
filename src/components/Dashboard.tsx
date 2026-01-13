@@ -84,7 +84,7 @@ export default function Dashboard({ courses, includePlanned = false }: Dashboard
                   fill="#8884d8"
                   dataKey="credits"
                 >
-                  {distribution.map((entry, index) => (
+                  {distribution.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

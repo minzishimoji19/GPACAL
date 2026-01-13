@@ -157,7 +157,13 @@ function App() {
   };
 
   const completedCourses = courses.filter(c => !c.isPlanned);
-  const semesters = Array.from(new Set(completedCourses.map(c => c.semester).filter(Boolean)));
+  const semesters: string[] = Array.from(
+    new Set(
+      completedCourses
+        .map(c => c.semester)
+        .filter((s): s is string => s !== undefined && s !== null && s !== '')
+    )
+  );
   const filteredCourses =
     selectedSemester === 'all'
       ? completedCourses

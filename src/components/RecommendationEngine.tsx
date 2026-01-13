@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CurriculumCourse, Course, RecommendationStrategy, RecommendedCourse } from '../types';
 import { generateRecommendation, RecommendationConfig } from '../utils/recommendation';
-import { calculateQualityPoints, calculateTotalCredits } from '../utils/gpa';
 
 interface RecommendationEngineProps {
   curriculum: CurriculumCourse[];
