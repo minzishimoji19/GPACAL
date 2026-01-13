@@ -1,6 +1,14 @@
 import { Course, GradeInfo } from '../types';
 
 /**
+ * Kiểm tra xem môn học có bị loại khỏi tính GPA không
+ */
+function isExcludedFromGPA(courseCode?: string): boolean {
+  if (!courseCode) return false;
+  return courseCode.startsWith('GDTC') || courseCode.startsWith('GDQP');
+}
+
+/**
  * Quy đổi điểm hệ 10 sang GPA thang 4.0 và letter grade
  */
 export function score10ToGPA4(score10: number): GradeInfo {
@@ -18,7 +26,7 @@ export function score10ToGPA4(score10: number): GradeInfo {
  * Tính GPA tích lũy thang 4.0
  */
 export function calculateGPA4(courses: Course[]): number {
-  const completedCourses = courses.filter(c => !c.isPlanned);
+  const completedCourses = courses.filter(c => !c.isPlanned && !isExcludedFromGPA(c.courseCode));
   if (completedCourses.length === 0) return 0;
 
   const totalQualityPoints = completedCourses.reduce((sum, course) => {
@@ -35,7 +43,7 @@ export function calculateGPA4(courses: Course[]): number {
  * Tính GPA thang 10 (weighted average)
  */
 export function calculateGPA10(courses: Course[]): number {
-  const completedCourses = courses.filter(c => !c.isPlanned);
+  const completedCourses = courses.filter(c => !c.isPlanned && !isExcludedFromGPA(c.courseCode));
   if (completedCourses.length === 0) return 0;
 
   const totalScore = completedCourses.reduce((sum, course) => {
@@ -51,7 +59,7 @@ export function calculateGPA10(courses: Course[]): number {
  * Tính tổng quality points
  */
 export function calculateQualityPoints(courses: Course[]): number {
-  const completedCourses = courses.filter(c => !c.isPlanned);
+  const completedCourses = courses.filter(c => !c.isPlanned && !isExcludedFromGPA(c.courseCode));
   return completedCourses.reduce((sum, course) => {
     const { gpa4 } = score10ToGPA4(course.score10);
     return sum + gpa4 * course.credits;
@@ -62,7 +70,7 @@ export function calculateQualityPoints(courses: Course[]): number {
  * Tính tổng tín chỉ
  */
 export function calculateTotalCredits(courses: Course[], includePlanned = false): number {
-  const coursesToCount = includePlanned ? courses : courses.filter(c => !c.isPlanned);
+  const coursesToCount = includePlanned ? courses.filter(c => !isExcludedFromGPA(c.courseCode)) : courses.filter(c => !c.isPlanned && !isExcludedFromGPA(c.courseCode));
   return coursesToCount.reduce((sum, course) => sum + course.credits, 0);
 }
 
@@ -70,14 +78,15 @@ export function calculateTotalCredits(courses: Course[], includePlanned = false)
  * Tính GPA dự kiến (bao gồm planned courses)
  */
 export function calculateProjectedGPA4(courses: Course[]): number {
-  if (courses.length === 0) return 0;
+  const filteredCourses = courses.filter(c => !isExcludedFromGPA(c.courseCode));
+  if (filteredCourses.length === 0) return 0;
 
-  const totalQualityPoints = courses.reduce((sum, course) => {
+  const totalQualityPoints = filteredCourses.reduce((sum, course) => {
     const { gpa4 } = score10ToGPA4(course.score10);
     return sum + gpa4 * course.credits;
   }, 0);
 
-  const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
+  const totalCredits = filteredCourses.reduce((sum, course) => sum + course.credits, 0);
 
   return totalCredits > 0 ? totalQualityPoints / totalCredits : 0;
 }
@@ -85,17 +94,17 @@ export function calculateProjectedGPA4(courses: Course[]): number {
 /**
  * Tính GPA theo kỳ học
  */
-export function calculateSemesterGPA4(courses: Course[], semester: string): number {
+export function calculateSemesterGPA4(courses: Course[], semester: string): number { && !isExcludedFromGPA(c.courseCode)
   const semesterCourses = courses.filter(c => c.semester === semester && !c.isPlanned);
   return calculateGPA4(semesterCourses);
 }
 
-export function calculateSemesterGPA10(courses: Course[], semester: string): number {
+export function calculateSemesterGPA10(courses: Course[], semester: string): number { && !isExcludedFromGPA(c.courseCode)
   const semesterCourses = courses.filter(c => c.semester === semester && !c.isPlanned);
   return calculateGPA10(semesterCourses);
 }
 
-export function calculateSemesterCredits(courses: Course[], semester: string): number {
+export function calculateSemesterCredits(courses: Course[], semester: string): number && !isExcludedFromGPA(c.courseCode) {
   const semesterCourses = courses.filter(c => c.semester === semester && !c.isPlanned);
   return calculateTotalCredits(semesterCourses);
 }
